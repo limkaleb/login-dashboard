@@ -1,12 +1,10 @@
-// import express from 'express';
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 // import bodyParser from 'body-parser';
 // import cors from 'cors';
 const { auth, requiresAuth } = require('express-openid-connect');
-const session = require('express-session');
-const MemoryStore = require('memorystore')(session);
+const MemoryStore = require('memorystore')(auth);
 const pool = require('./db');
 
 const app = express();
@@ -16,6 +14,10 @@ app.use(express.json());
 
 app.use(
   auth({
+    authorizationParams: {
+      response_type: 'code',
+      scope: 'openid profile email',
+    },
     authRequired: false,
     auth0Logout: true,
     issuerBaseURL: process.env.ISSUER_BASE_URL,
@@ -23,24 +25,26 @@ app.use(
     clientID: process.env.CLIENT_ID,
     secret: process.env.SECRET,
     idpLogout: true,
+    routes: {
+      login: false,
+    },
     session: {
       store: new MemoryStore({
-        checkPeriod: 1 * 1000,
+        checkPeriod: 24 * 60 * 1000,
       }),
     },
   }),
 );
 
 app.get('/', (req, res) => {
-  console.log('req.oidc: ', req.oidc.user);
   res.send(req.oidc.isAuthenticated() ? `hello ${req.oidc.user.sub}` : 'Logged out');
 });
 
-app.get('/profile', requiresAuth(), (req, res) => {
-  res.send(JSON.stringify(req.oidc.user));
+app.get('/dashboard_login', (req, res) => {
+  res.oidc.login({ returnTo: '/profile' });
 });
 
-app.get('/dashboard', requiresAuth(), async (req, res) => {
+app.get('/profile', requiresAuth(), async (req, res) => {
   const { user } = req.oidc;
 
   const { name, email } = user;
@@ -63,7 +67,6 @@ app.get('/dashboard', requiresAuth(), async (req, res) => {
   const { id, counter } = userCheck.rows[0];
 
   const newCounter = counter + 1;
-
   console.log('new counter: ', newCounter);
 
   const userLoggedIn = await pool.query(
@@ -72,6 +75,12 @@ app.get('/dashboard', requiresAuth(), async (req, res) => {
   );
 
   res.json(userLoggedIn.rows[0]);
+});
+
+app.get('/dashboard', requiresAuth(), async (req, res) => {
+  console.log('req.oidcreq.oidc: ', req.oidc.accessToken);
+  console.log('isexpiredd: ', req.oidc.accessToken.isExpired());
+  res.send(JSON.stringify(req.oidc.user, null, 2));
 });
 
 app.post('/user_name', async (req, res) => {
