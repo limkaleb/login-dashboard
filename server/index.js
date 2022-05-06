@@ -6,6 +6,7 @@ require('dotenv').config();
 const { auth, requiresAuth } = require('express-openid-connect');
 const MemoryStore = require('memorystore')(auth);
 const pool = require('./db');
+const userRouter = require('./routes/users');
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(
     issuerBaseURL: process.env.ISSUER_BASE_URL,
     baseURL: process.env.BASE_URL,
     clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.SECRET,
     secret: process.env.SECRET,
     idpLogout: true,
     routes: {
@@ -83,44 +85,7 @@ app.get('/dashboard', requiresAuth(), async (req, res) => {
   res.send(JSON.stringify(req.oidc.user, null, 2));
 });
 
-app.post('/user_name', async (req, res) => {
-  try {
-    const { username } = req.body;
-    const newUserName = await pool.query(
-      'INSERT INTO users (user_name) VALUES($1) RETURNING *',
-      [username],
-    );
-    res.json(newUserName.rows[0]);
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-// get all
-app.get('/user_name', async (req, res) => {
-  try {
-    const userNames = await pool.query('SELECT * FROM users');
-
-    res.json(userNames.rows);
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-// get single
-app.get('/user_name/:id', async (req, res) => {
-  try {
-    console.log('req.params: ', req.params);
-    const { id } = req.params;
-    const userName = await pool.query(
-      'SELECT * FROM users WHERE id = $1',
-      [id],
-    );
-    res.json(userName.rows[0]);
-  } catch (err) {
-    console.error(err.message);
-  }
-});
+app.use('/users', userRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
