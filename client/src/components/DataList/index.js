@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Table, TableBody, TableHead, TableRow, TableCell } from '@material-ui/core';
+import moment from 'moment';
 import useStyles from './styles'
 
 const DataList = ({ list }) => {
@@ -7,20 +9,26 @@ const DataList = ({ list }) => {
   console.log('listt: ', list)
 
   return (
-    <table>
-      <tbody>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>User Name</TableCell>
+          <TableCell>Joined</TableCell>
+          <TableCell>Login Count</TableCell>
+          <TableCell>Last Session</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
         {list.map((item, index) => (
-          <tr key={index}>
-            <td className={classes.nameCol}>
-              {item.user_name}
-            </td>
-            <td className={classes.valueCol}>
-              {item.email}
-            </td>
-          </tr>
+          <TableRow>
+            <TableCell>{item.user_name}</TableCell>
+            <TableCell>{moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a')}</TableCell>
+            <TableCell>{item.counter}</TableCell>
+            <TableCell>{moment(item.updated_at).format('MMMM Do YYYY, h:mm:ss a')}</TableCell>
+          </TableRow>
         ))}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   )
 };
 

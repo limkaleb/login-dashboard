@@ -37,7 +37,7 @@ const App = () => {
       {isLoading ?
         <CircularProgress /> : <DataList list={data.data} />}
       <div className={classes.buttons}>
-        <Button variant="contained" color="primary">
+        <Button className={classes.button} variant="contained" color="primary">
           Sign Up
         </Button>
         <Button className={classes.button} variant="outlined">
