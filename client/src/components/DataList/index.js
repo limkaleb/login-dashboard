@@ -20,7 +20,7 @@ const DataList = ({ list }) => {
       </TableHead>
       <TableBody>
         {list.map((item, index) => (
-          <TableRow>
+          <TableRow key={index}>
             <TableCell>{item.user_name}</TableCell>
             <TableCell>{moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a')}</TableCell>
             <TableCell>{item.counter}</TableCell>

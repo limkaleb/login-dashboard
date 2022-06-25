@@ -17,4 +17,5 @@ model User {
   counter Int @default(0)
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
+  password String?
 }

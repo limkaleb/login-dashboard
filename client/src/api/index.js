@@ -1,5 +1,4 @@
 import axios from 'axios';
 
-const url = 'http://localhost:3000/user_name';
-
-export const getUsers = () => axios.get(url);
+export const getUsers = () => axios.get('http://localhost:3000/users', { withCredentials: true });
+export const signOut = () => axios.get('http://localhost:3000/auth/logout');

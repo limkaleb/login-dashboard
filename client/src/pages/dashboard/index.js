@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, AppBar, Typography, CircularProgress } from '@material-ui/core';
+import { Container, AppBar, Typography, CircularProgress, Button } from '@material-ui/core';
 import * as api from '../../api';
 import useStyles from './styles'
 import DataList from '../../components/DataList'
@@ -24,6 +24,13 @@ const DashBoard = () => {
     getData()
   }, []);
 
+  // useEffect(() => {
+  //   console.log('userr: ', user)
+  //   if (user) {
+  //     return navigate('/dashboard');
+  //   }
+  // }, [navigate, user])
+
   return (
     <Container maxWidth="md">
       <AppBar
@@ -33,6 +40,14 @@ const DashBoard = () => {
       >
         <Typography variant="h4" color="primary" align="center">Dashboard</Typography>
       </AppBar>
+      <Button
+          className={classes.button}
+          variant="contained"
+          color="secondary"
+          onClick={() => window.open("http://localhost:3000/auth/logout", "_self")}
+        >
+          Sign Out
+        </Button>
       {isLoading ?
         <CircularProgress /> : <DataList list={data.data} />}
     </Container>
