@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 router.get('/', authenticate, async (req, res, next) => {
   try {
     // console.log('requserrr: ', req.user);
-    console.log('reqq: ', req.session);
+    // console.log('reqq: ', req.session);
     const users = await prisma.user.findMany({});
     res.json(users);
   } catch (err) {
@@ -19,7 +19,7 @@ router.get('/', authenticate, async (req, res, next) => {
 // get single
 router.get('/:id', async (req, res, next) => {
   try {
-    console.log('req.params: ', req.params);
+    // console.log('req.params: ', req.params);
     const { id } = req.params;
     const user = await prisma.user.findUnique({
       where: {

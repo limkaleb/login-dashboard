@@ -51,6 +51,7 @@ module.exports = (passport) => {
           user = await prisma.user.create({
             data: newUser,
           });
+          done(null, user);
         }
       } catch (err) {
         console.error(err);

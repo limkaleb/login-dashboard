@@ -31,7 +31,9 @@ const Landing = () => {
           console.log(err);
         });
     };
-    getUser();
+    if (!user) {
+      getUser();
+    }
   });
 
   useEffect(() => {

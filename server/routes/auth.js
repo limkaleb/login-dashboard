@@ -1,13 +1,31 @@
 const router = require('express').Router();
 const passport = require('passport');
+const { PrismaClient } = require('@prisma/client');
 
-router.get('/login/success', (req, res) => {
-  console.log('zzz reqq: ', req.session);
+const prisma = new PrismaClient();
+
+router.get('/login/success', async (req, res) => {
+  console.log('requserzzzzz: ', req.user);
   if (req.user) {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: req.user.email,
+      },
+    });
+
+    const updateUser = await prisma.user.update({
+      where: {
+        email: req.user.email,
+      },
+      data: {
+        counter: user.counter + 1,
+      },
+    });
+
     res.status(200).json({
       success: true,
       message: 'success',
-      user: req.user,
+      user: updateUser,
       cookies: req.session,
     });
   } else {
