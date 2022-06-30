@@ -1,23 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Toolbar, AppBar, Typography, CircularProgress, Button } from '@material-ui/core';
+import { Box, Toolbar, AppBar, Typography, CircularProgress, Button, Icon } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
 import * as api from '../../api';
 import useStyles from './styles'
-import DataList from '../../components/DataList'
 
 const Profile = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
 
   useEffect(() => {
     const getData = async () => {
       setIsLoading(true);
       try {
-        const result = await api.getUsers();
-        console.log('result: ', result)
-        setData(result)
+        const { data } = await api.getSession();
+        setData(data)
       } catch (error) {
         console.log(error.message);
       }
@@ -26,17 +24,24 @@ const Profile = () => {
     getData()
   }, []);
 
-  // useEffect(() => {
-  //   console.log('userr: ', user)
-  //   if (user) {
-  //     return navigate('/dashboard');
-  //   }
-  // }, [navigate, user])
+  const renderUser = () => {
+    return (
+      <Box style={{ padding: '20px 20px' }}>
+        <Typography variant="h6">
+          {data?.email}
+        </Typography>
+        <Typography variant="h6">
+          Welcome, {data?.user_name}!
+        </Typography>
+      </Box>
+    )
+  }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
+          <Icon name="delete_forever" />
           <Typography variant="h6" style={{ flex: 1 }}>
             Profile
           </Typography>
@@ -62,8 +67,8 @@ const Profile = () => {
           </div>
         </Toolbar>
       </AppBar>
-      {isLoading ?
-        <CircularProgress /> : <DataList list={data.data} />}
+      {isLoading ? <CircularProgress /> : null}
+      {renderUser()}
     </Box>
   );
 }

@@ -26,13 +26,6 @@ const DashBoard = () => {
     getData()
   }, []);
 
-  // useEffect(() => {
-  //   console.log('userr: ', user)
-  //   if (user) {
-  //     return navigate('/dashboard');
-  //   }
-  // }, [navigate, user])
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">

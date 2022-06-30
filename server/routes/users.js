@@ -4,6 +4,17 @@ const { authenticate } = require('../middleware/auth');
 
 const prisma = new PrismaClient();
 
+// get session
+router.get('/me', authenticate, async (req, res, next) => {
+  try {
+    const { user } = req.session.passport;
+    console.log('req.usersszz: ', req.user);
+    res.json(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // get all
 router.get('/', authenticate, async (req, res, next) => {
   try {

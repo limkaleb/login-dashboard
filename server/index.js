@@ -15,7 +15,12 @@ const app = express();
 require('./passport')(passport);
 
 app.use(
-  cookieSession({ name: 'session', keys: ['kaleb'], maxAge: 24 * 60 * 60 * 100 }),
+  cookieSession({
+    name: 'session',
+    keys: ['kaleb'],
+    httpOnly: false,
+    maxAge: 24 * 60 * 60 * 100,
+  }),
 );
 
 // app.use(session({
@@ -61,46 +66,6 @@ app.use(passport.session());
 //     // },
 //   }),
 // );
-
-// app.get('/', (req, res) => {
-//   res.send(req.oidc.isAuthenticated() ? `hello ${req.oidc.user.sub}` : 'Logged out');
-// });
-
-// app.get('/dashboard_login', (req, res) => {
-//   res.oidc.login({ returnTo: '/profile' });
-// });
-
-// app.get('/profile', requiresAuth(), async (req, res) => {
-//   const { user } = req.oidc;
-
-//   const { name, email } = user;
-
-//   const userCheck = await pool.query(
-//     'SELECT * FROM users WHERE user_name = $1 AND email = $2',
-//     [name, email],
-//   );
-
-//   if (userCheck.rows.length <= 0) {
-//     const newUser = await pool.query(
-//       'INSERT INTO users (user_name, email, created_at, updated_at) VALUES($1, $2, current_timestamp, current_timestamp) RETURNING *',
-//       [name, email],
-//     );
-
-//     res.json(newUser.rows[0]);
-//   }
-
-//   const { id, counter } = userCheck.rows[0];
-
-//   const newCounter = counter + 1;
-//   console.log('new counter: ', newCounter);
-
-//   const userLoggedIn = await pool.query(
-//     'UPDATE users SET updated_at = current_timestamp, counter = $2 WHERE id = $1 RETURNING *',
-//     [id, newCounter],
-//   );
-
-//   res.json(userLoggedIn.rows[0]);
-// });
 
 app.use('/', require('./routes/index'));
 

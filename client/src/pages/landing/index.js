@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext, createContext } from 'react';
 import { Button, Box } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie'
 import useStyles from './styles'
 
 const Landing = () => {
@@ -41,6 +42,8 @@ const Landing = () => {
       return navigate('/dashboard');
     }
   }, [navigate, user])
+
+  console.log('Cookies.get() : ', Cookies.get())
 
   return (
     <Box
