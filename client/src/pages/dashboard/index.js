@@ -41,6 +41,12 @@ const DashBoard = () => {
             Dashboard
           </Typography>
           <div>
+          <Button
+              color="inherit"
+              onClick={() => navigate('/profile')}
+            >
+              Dashboard
+            </Button>
             <Button
               color="inherit"
               onClick={() => navigate('/profile')}
