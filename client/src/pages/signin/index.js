@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Box, Typography, TextField } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
 import * as api from '../../api';
@@ -7,18 +7,24 @@ import useStyles from './styles'
 const SignIn = () => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const [processing, setProcessing] = useState(false);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
 
   const handleSubmit = async () => {
-    console.log('value email: ', email);
-    console.log('value password: ', password);
-    const res = await api.signIn({
-      email,
-      password,
-    });
-    console.log('ress: ', res);
-    navigate('/');
+    try {
+      setProcessing(true);
+      const res = await api.signIn({
+        email,
+        password,
+      });
+      console.log('ress: ', res);
+      navigate('/');
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setProcessing(false);
+    }
   }
 
   return (
@@ -45,7 +51,7 @@ const SignIn = () => {
             autoFocus
             id="password"
             label="Password"
-            type="text"
+            type="password"
             fullWidth
             value={password}
             onChange={(evt) => setPassword(evt.target.value)}
@@ -55,6 +61,7 @@ const SignIn = () => {
           variant="contained"
           color="primary"
           onClick={handleSubmit}
+          disabled={processing}
         >
           Sign In
         </Button>

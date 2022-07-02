@@ -41,6 +41,7 @@ module.exports = (passport) => {
       const newUser = {
         email: profile.emails[0].value,
         user_name: profile.displayName,
+        verified: true,
       };
       try {
         let user = await prisma.user.findUnique({

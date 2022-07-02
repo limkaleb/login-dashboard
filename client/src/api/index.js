@@ -11,5 +11,5 @@ export const signUp = (request) => {
 };
 export const signIn = (request) => {
     console.log('requet login: ', request);
-    return axios.post('http://localhost:3000/auth/login', request, { withCredentials: false });
+    return axios.post('http://localhost:3000/auth/login', request, { withCredentials: true });
 }

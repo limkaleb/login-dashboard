@@ -43,15 +43,14 @@ router.get('/login/failed', (req, res) => {
   });
 });
 
-// router.post('/login', passport.authenticate('local'), (req, res) => {
-//   console.log('here here', res);
-//   res.json();
-// });
-
-router.post('/login', passport.authenticate('local', {
-  successRedirect: '/',
-  failureRedirect: '/login/failed',
-}));
+router.post(
+  '/login',
+  passport.authenticate('local', { failureRedirect: '/auth/login/failed' }),
+  (req, res) => {
+    // res.redirect('/auth/login/success');
+    res.json(req.user);
+  },
+);
 
 router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 
