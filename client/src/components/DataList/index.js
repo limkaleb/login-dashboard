@@ -1,15 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, TableBody, TableHead, TableRow, TableCell } from '@material-ui/core';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import useStyles from './styles'
 
 const DataList = ({ list }) => {
   const classes = useStyles();
-  console.log('listt: ', list)
-
   return (
-    <Table>
+    <Table style={{ marginTop: '20px' , borderTopWidth: 2, borderColor: 'red',borderStyle: 'solid' }}>
       <TableHead>
         <TableRow>
           <TableCell>User Name</TableCell>
@@ -19,12 +17,12 @@ const DataList = ({ list }) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {list.map((item, index) => (
+        {list.length > 0 && list.map((item, index) => (
           <TableRow key={index}>
             <TableCell>{item.user_name}</TableCell>
-            <TableCell>{moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a')}</TableCell>
+            <TableCell>{dayjs(item.created_at).format('MMMM DD YYYY, h:mm:ss a')}</TableCell>
             <TableCell>{item.counter}</TableCell>
-            <TableCell>{moment(item.updated_at).format('MMMM Do YYYY, h:mm:ss a')}</TableCell>
+            <TableCell>{dayjs(item.updated_at).format('MMMM DD YYYY, h:mm:ss a')}</TableCell>
           </TableRow>
         ))}
       </TableBody>

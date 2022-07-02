@@ -43,6 +43,16 @@ router.get('/login/failed', (req, res) => {
   });
 });
 
+// router.post('/login', passport.authenticate('local'), (req, res) => {
+//   console.log('here here', res);
+//   res.json();
+// });
+
+router.post('/login', passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/login/failed',
+}));
+
 router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 
 router.get('/google/callback', passport.authenticate('google', {

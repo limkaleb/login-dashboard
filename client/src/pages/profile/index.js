@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Toolbar, AppBar, Typography, CircularProgress, Button, Icon } from '@material-ui/core';
+import {
+  Box,
+  Toolbar,
+  AppBar,
+  Typography,
+  CircularProgress,
+  Button,
+} from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
+import { FaUser } from 'react-icons/fa';
 import * as api from '../../api';
-import useStyles from './styles'
+import Dialog from '../../components/CustomDialog'
 
 const Profile = () => {
-  const classes = useStyles();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(null);
+  const [name, setName] = useState('');
+  const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
@@ -16,13 +25,33 @@ const Profile = () => {
       try {
         const { data } = await api.getSession();
         setData(data)
+        setName(data.user_name)
       } catch (error) {
         console.log(error.message);
       }
       setIsLoading(false);
     };
     getData()
-  }, []);
+  }, [openDialog]);
+
+  const handleEdit = async () => {
+    const { data } = await api.updateUser(name);
+    setName(data.user_name);
+    setOpenDialog(false);
+  }
+
+  const renderEditDialog = () => {
+    if (!openDialog) return null;
+    return (
+      <Dialog
+        open={openDialog}
+        value={name}
+        handleClose={() => setOpenDialog(false)}
+        handleSubmit={() => handleEdit(name)}
+        onchange={(name) => setName(name)}
+      />
+    )
+  }
 
   const renderUser = () => {
     return (
@@ -33,6 +62,14 @@ const Profile = () => {
         <Typography variant="h6">
           Welcome, {data?.user_name}!
         </Typography>
+        <Button
+          style={{ marginTop: '10px' }}
+          color="primary"
+          variant="contained"
+          onClick={() => setOpenDialog(true)}
+        >
+          Edit Name
+        </Button>
       </Box>
     )
   }
@@ -41,8 +78,8 @@ const Profile = () => {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Icon name="delete_forever" />
-          <Typography variant="h6" style={{ flex: 1 }}>
+          <FaUser size="2em" style={{ marginRight: '20px' }} />
+          <Typography variant="h4" style={{ flex: 1 }}>
             Profile
           </Typography>
           <div>
@@ -69,6 +106,7 @@ const Profile = () => {
       </AppBar>
       {isLoading ? <CircularProgress /> : null}
       {renderUser()}
+      {renderEditDialog()}
     </Box>
   );
 }

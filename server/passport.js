@@ -8,16 +8,19 @@ const prisma = new PrismaClient();
 
 module.exports = (passport) => {
   const authenticateUser = async (email, password, done) => {
-    const user = prisma.users.findUnique({
+    console.log('authenticateee: ', email, password);
+    const user = await prisma.user.findUnique({
       where: {
         email,
       },
     });
+    console.log('userrres: ', user);
     if (user == null) {
       return done(null, false, { message: 'No user with that email' });
     }
     try {
       if (await bcrypt.compare(password, user.password)) {
+        console.log('inside comparee');
         return done(null, user);
       }
       return done(null, false, { message: 'Password Incorrect' });
@@ -27,6 +30,7 @@ module.exports = (passport) => {
   };
 
   passport.use(new LocalStrategy({ usernameField: 'email' }, authenticateUser));
+
   passport.use(new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,

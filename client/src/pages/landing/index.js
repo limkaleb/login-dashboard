@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useContext, createContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Box } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie'
 import useStyles from './styles'
 
 const Landing = () => {
@@ -43,8 +42,6 @@ const Landing = () => {
     }
   }, [navigate, user])
 
-  console.log('Cookies.get() : ', Cookies.get())
-
   return (
     <Box
       display="flex"
@@ -53,10 +50,19 @@ const Landing = () => {
       minHeight="100vh"
     >
       <div className={classes.buttons}>
-        <Button className={classes.button} variant="contained" color="primary">
+        <Button
+          className={classes.button}
+          variant="contained"
+          color="primary"
+          onClick={() => navigate('/signup')}
+        >
           Sign Up
         </Button>
-        <Button className={classes.button} variant="outlined">
+        <Button
+          className={classes.button}
+          variant="outlined"
+          onClick={() => navigate('/signin')}  
+        >
           Sign In
         </Button>
         <Button
